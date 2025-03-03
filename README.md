@@ -1,5 +1,3 @@
-# Pizzozo Annual Sales Report Dashboard 
-This is about a case study on Pizzozo Sales.
 
 
 ## PURPOSE
