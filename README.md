@@ -40,7 +40,11 @@ Create a bar chart that displays the daily trend of total orders over a specific
 Monthly Trend for Total Orders: 
 
 Create a line chart that illustrates the hourly trend of total orders throughout the dav. This chart will allow us to identify peak hours or periods of high order activity.
-Percentage of Sales by Pizza Category: Create a pie chart that shows the distribution of sales across different pizza categories. This chart will provide insights into the popularity of various pizza categories and their contribution to overall sales.
+
+
+Percentage of Sales by Pizza Category: 
+
+Create a pie chart that shows the distribution of sales across different pizza categories. This chart will provide insights into the popularity of various pizza categories and their contribution to overall sales.
 
 
 Percentage of Sales by Pizza Size:
@@ -92,4 +96,160 @@ This work includes data validation using SQL, data cleaning and visualisation us
 The data cleaning includes altering the tables by adding columns for necessary input (which is not available in the origin table) and for suitable name/preference/alias (for example January as Jan, 1/1/2015 as Monday). The process in Power BI includes power query and DAX function.
 
 The visualisation is done using Power BI. The dashboard is equipped with KPI metrics and various charts containing relevant insight about pizza revenue trend, sales trend, order trend, and sales trend regarding the pizza category and size.
+
+
+### SQL Queries
+
+#### KPI requirement
+
+
+Total revenue = sum of total price
+```sql
+select sum(total_price) as 'Total Revenue' from pizza_sales
+```
+
+
+Average order value = total revenue / total order
+```sql
+select sum(total_price)/count(distinct order_id) as 'Average Order Value' from pizza_sales
+```
+
+Total pizza sold
+```sql
+select sum(quantity) as 'Total Pizza Sold' from pizza_sales
+```
+
+Total orders
+```sql
+select count(distinct order_id) as 'Total Orders' from pizza_sales
+```
+
+Average pizza per order = total pizza / total order
+```sql
+select cast 
+(cast (sum(quantity) as decimal (10,2))
+/ cast (count(distinct order_id) as decimal (10,2)) as decimal (10,2))
+as 'Average Pizzas per Order' from pizza_sales
+```
+
+
+
+#### Chart requirement 
+
+Trend for total order (daily) as bar chart
+```sql
+select datename(DW, order_date) as 'Order Day',
+count(distinct order_id) as 'Total Orders' 
+from pizza_sales
+group by datename(DW, order_date)
+```
+
+
+
+Trend for order (monthly) as line chart
+```sql
+select datename(MONTH, order_date) as 'Month Name',
+count(distinct order_id) as 'Total Orders' 
+from pizza_sales
+group by datename(Month, order_date)
+order by 'Total Orders' Desc
+```
+
+Percentage of sales by pizza category (pie chart) 
+```sql
+select pizza_category,sum(total_price)*100 / (select sum(total_price) from pizza_sales) as 'Percentage of Total Sales'
+from pizza_sales
+group by pizza_category
+```
+
+
+If with total sales per pizza category, it will look like this:
+```sql
+select pizza_category, sum(total_price) as 'Total Sales', sum(total_price)*100 / (select sum(total_price) from pizza_sales) as 'Percentage of Total Sales'
+from pizza_sales
+group by pizza_category
+```
+
+
+If we want a specific month, it will look like this:
+```sql
+select pizza_category, 
+sum(total_price) as 'Total Sales', 
+sum(total_price)*100 / (select sum(total_price) from pizza_sales where month(order_date) = 1) as 'Percentage of Total Sales'
+from pizza_sales
+where month(order_date) = 1
+group by pizza_category
+```
+
+Percentage of pizza sales by size (pie chart) 
+```sql
+select pizza_size, 
+cast(sum(total_price) as decimal (10,2)) as 'Total Sales', 
+cast(sum(total_price)*100 / (select sum(total_price) from pizza_sales) as decimal (10,2)) as 'Percentage of Total Sales'
+from pizza_sales
+group by pizza_size
+order by 'Percentage of Total Sales' DESC
+```
+
+If we want to see the particular month, it will look like this:
+```sql
+select pizza_size, 
+cast(sum(total_price) as decimal (10,2)) as 'Total Sales', 
+cast(sum(total_price)*100 / (select sum(total_price) from pizza_sales where datepart (quarter, order_date) = 1) as decimal (10,2)) as 'Percentage of Total Sales'
+from pizza_sales
+where datepart (quarter, order_date) = 1
+group by pizza_size
+order by 'Percentage of Total Sales' DESC
+```
+
+Total pizza sold by pizza category funnel chart
+Top 5 best seller by revenue, total orders, total quantity as in bar chart
+
+Top 5 revenue:
+```sql
+select top 5 pizza_name, sum(total_price) as 'Total Revenue' from pizza_sales
+group by pizza_name 
+order by 'Total Revenue' desc
+```
+
+
+Top 5 quantity:
+```sql
+select top 5 pizza_name, sum(quantity) as 'Total Quantity' from pizza_sales
+group by pizza_name 
+order by 'Total Quantity' desc
+```
+
+
+Top 5 orders:
+```sql
+select top 5 pizza_name, count(distinct order_id) as 'Total Orders' from pizza_sales
+group by pizza_name 
+order by 'Total Orders' desc
+```
+
+
+Bottom 5 worst seller by revenue, total orders, total quantity bar chart
+
+Bottom 5 revenue
+```sql
+select top 5 pizza_name, sum(total_price) as 'Total Revenue' from pizza_sales
+group by pizza_name 
+order by 'Total Revenue' 
+```
+
+Bottom 5 quantity:
+```sql
+select top 5 pizza_name, sum(quantity) as 'Total Quantity' from pizza_sales
+group by pizza_name 
+order by 'Total Quantity' 
+```
+
+Bottom 5 orders:
+```sql
+select top 5 pizza_name, count(distinct order_id) as 'Total Orders' from pizza_sales
+group by pizza_name 
+order by 'Total Orders' 
+```
+
 
