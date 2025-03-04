@@ -252,4 +252,52 @@ group by pizza_name
 order by 'Total Orders' 
 ```
 
+### Power BI DAX Formula
+To create more measures
+
+To create Total Orders 
+![total orders dax](assets/image DAX/Screenshot 2025-03-03 163901.png)
+
+
+To create Total Pizzas Sold 
+![total pizza sold](assets/image DAX/Screenshot 2025-03-03 163914.png)
+
+
+To create Total Revenue
+![total revenue dax](assets/image DAX/Screenshot 2025-03-03 163920.png)
+
+
+to create Average Order Value
+![average order value dax ](assets/image DAX/Screenshot 2025-03-03 163933.png)
+
+
+### Power BI Power Query
+To manipulate table such as add column and replace value
+
+
+Add column of shortened day name such as Monday to Mon, 
+![shorter day name](assets/image power query/Screenshot 2025-02-28 234007.png)
+
+
+Replace the size shortened size label to longer such as L to Large, 
+![longer size label](assets/image power query/Screenshot 2025-02-27 152508.png
+
+
+Adding column for day number such as Sunday as 1, Monday as 2,
+![day number](assets/image power query/Screenshot 2025-03-04 090122.png)
+
+
+Adding column for month name derived from dates such as 1/1 to 31/1 as January, 
+![month name](assets/image power query/Screenshot 2025-03-04 090219.png)
+
+
+Adding column for month number such as January as 1,
+![month number](assets/image power query/Screenshot 2025-03-04 090228.png)
+
+### Power BI Visualisation 
+
+![dashboard page 1](assets/images dashboard/Screenshot 2025-03-04 091637.png)
+
+
+![dashboard page 2](assets/images dashboard/Screenshot 2025-03-04 091647.png)
 
